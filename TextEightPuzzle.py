@@ -114,8 +114,6 @@ class Puzzle:
             newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row][col + 1] = newGameBoard.gameBoard[row][col + 1], newGameBoard.gameBoard[row][col]
         return newGameBoard
 
-    def actions(self):
-        pass
 
 
 gameBoard = [[1, 8, 2], [0, 4, 3], [7, 6, 5]]
