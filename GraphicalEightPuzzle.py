@@ -80,7 +80,10 @@ class Node:
 
     @property
     def actions(self):
-        return self.currentBorad.availbleMoves()
+        if self.action == None:
+            return self.currentBorad.availbleMoves()
+        else:
+            return self.currentBorad.availbleMoves(self.action)
 
 
 class Solver:
@@ -144,7 +147,7 @@ class Puzzle:
                     distance += abs(x - i) + abs(y - j)
         return distance
 
-    def availbleMoves(self):
+    def availbleMoves(self, removeCh = "A"):
         row, col = self.getLocationOfBlank(self.gameBoard)
         list = []
         if row is not 0:
@@ -155,6 +158,15 @@ class Puzzle:
             list.append("L")
         if col is not 2:
             list.append("R")
+        if removeCh != "A":
+            if removeCh == "U":
+                list.remove("D")
+            elif removeCh == "D":
+                list.remove("U")
+            elif removeCh == "R":
+                list.remove("L")
+            elif removeCh == "L":
+                list.remove("R")
         return list
 
     def move(self, val):
@@ -172,7 +184,7 @@ class Puzzle:
 
 
 
-gameBoard = [[1, 8, 2], [0, 4, 3], [7, 6, 5]]
+gameBoard = [[1, 8, 2], [7, 6, 5], [0, 4, 3]]
 puzzle = Puzzle(gameBoard)
 solver = Solver(puzzle)
 solved = solver.solve()
