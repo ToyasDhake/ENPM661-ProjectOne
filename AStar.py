@@ -1,6 +1,7 @@
 from itertools import chain, product
 from collections import deque
 from copy import deepcopy
+import numpy as np
 
 
 class Node:
@@ -56,6 +57,19 @@ class Solver:
 class Puzzle:
     def __init__(self, gameBoard):
         self.gameBoard = gameBoard
+
+    def isSolvable(self):
+        count = 0
+        array = np.array(self.gameBoard).flatten()
+        for i in range(len(array)):
+            for j in range(i, len(array)):
+                if array[i] > array[j]:
+                    if array[j] != 0:
+                        count += 1
+        if count % 2 is 0:
+            return True
+        else:
+            return False
 
     def getLocationOfBlank(self, gameBoard):
         for i, j in product(range(3), range(3)):
