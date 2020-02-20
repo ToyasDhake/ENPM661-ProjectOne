@@ -39,6 +39,6 @@ if puzzle.isSolvable():
     for node in solver.seen:
         file2.write(listToString(node.gameBoard) + "\n")
     file2.close()
-    print("Time taken:- " + str(end - start) + " seconds.")
+    print("Time taken: " + str(end - start) + " seconds.")
 else:
     print("Entered game board is not Solvable.")
