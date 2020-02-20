@@ -36,9 +36,17 @@ if puzzle.isSolvable():
         print(node.action)
     file1.close()
     file2 = open("Nodes.txt", "w")
-    for node in solver.seen:
-        file2.write(listToString(node.gameBoard) + "\n")
+    file3 = open("NodesInfo.txt", "w")
+    while solver.que:
+        node = solver.que.popleft()
+        if node.parent == None:
+            file2.write(listToString(node.currentBorad.gameBoard) + "\n")
+            file3.write(str(node.index) + " 0\n")
+        else:
+            file2.write(listToString(node.currentBorad.gameBoard) + "\n")
+            file3.write(str(node.index)+" "+str(node.parent.index)+"\n")
     file2.close()
+    file3.close()
     print("Time taken: " + str(end - start) + " seconds.")
 else:
     print("Entered game board is not Solvable.")

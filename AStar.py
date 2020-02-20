@@ -5,10 +5,11 @@ import numpy as np
 
 
 class Node:
-    def __init__(self, currentBorad, parent=None, action=None):
+    def __init__(self, currentBorad, index, parent=None, action=None):
         self.currentBorad = currentBorad
         self.parent = parent
         self.action = action
+        self.index = index
         if (self.parent != None):
             self.g = parent.g + 1
         else:
@@ -36,21 +37,28 @@ class Solver:
         self.start = gameBoard
 
     def solve(self):
+        count = 1
         queue = deque()
-        queue.append(Node(self.start))
+        self.que = deque()
+        queue.append(Node(self.start, count))
+        self.que.append(Node(self.start, count))
+        count += 1
         seen = set()
         seen.add(queue[0].currentBorad)
         while queue:
             queue = deque(sorted(list(queue), key=lambda node: node.f))
             node = queue.popleft()
             if node.currentBorad.score() == 0:
-                self.seen = seen
+                self.que = deque(sorted(list(self.que), key=lambda node: node.index))
                 return node.path
 
             for action in node.actions:
-                child = Node(node.currentBorad.move(action), node, action)
+                child = Node(node.currentBorad.move(action), count, node, action)
+
 
                 if child.currentBorad not in seen:
+                    self.que.append(Node(node.currentBorad.move(action), count, node, action))
+                    count += 1
                     queue.appendleft(child)
                     seen.add(child.currentBorad)
 
