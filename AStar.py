@@ -44,6 +44,7 @@ class Solver:
             queue = deque(sorted(list(queue), key=lambda node: node.f))
             node = queue.popleft()
             if node.currentBorad.score() == 0:
+                self.seen = seen
                 return node.path
 
             for action in node.actions:
