@@ -1,4 +1,4 @@
-# ENPM661-ProjectOne: 8-Puzzle Problem
+# ENPM661-ProjectOne: Biased BFS for 8-Puzzle Problem
 
 ## Overview
 
@@ -11,14 +11,26 @@ orientaion of blocks as shown in the figure.
 There are 3 files
 - TextEightPuzzle.py
 - GraphicalEightPuzzle.py
-- AStar.py
+- SolverLogic.py
  
-AStar.py is the file which has implementatioon of 8 Puzzle problem solver.
+SolverLogic.py is the file which has implementatioon of 8 Puzzle problem solver.
 
-TextEightPuzzle.py uses the AStar.py to solve the problem and create required text files as output.
+TextEightPuzzle.py uses the SolverLogic.py to solve the problem and create required text files as output.
 
-GraphicalEightPuzzle.py uses the AStar.py to solve the problem and creates animation for solution 
-from given state to goal state.
+GraphicalEightPuzzle.py uses the SolverLogic.py to solve the problem and creates animation for solution 
+from given state to goal state for visualization purpose.
+
+## Logic
+
+The algorithms takes in initial state as input and give out the path took to reach the goal node.
+For this it creates all possible moves for any given states and checks if goal state is reached. If not then it again 
+creates all possible nodes for each child node. To avoid getting stuck in loop 2 things are being tracked-
+- A Set is maintained that holds all the explored nodes and each time a child is create it checks if the node is previously visited.
+- While calculating all possible move the reverse of last performed move is not considered i.e. if a state is reached by performing the "Up" move
+then for that perticular move the "Down" actioon will not be considered for creating child as it would result in parent of the node.
+
+BFS takes a lot of time to excute so it is needed to be optimized in order to reduce the run time. Here, the biased part comes into picture. Every time 
+a child is created its score is calculated based on where it stands compared to goal state. And child with better score is given priority.
 
 ## Demo Steps
 
@@ -52,9 +64,12 @@ Graphics base-
 Text base-
 
 Three files are genrated-
-nodePath.txt- Contains the path form initial state to goal state.
-Nodes.txt- Contains all the explored nodes.
-NodesInfo.txt- Contain index of the node and its parent.
+
+- nodePath.txt- Contains the path form initial state to goal state.
+
+- Nodes.txt- Contains all the explored nodes.
+
+- NodesInfo.txt- Contain index of the node and its parent.
 
 Graphics base-
 

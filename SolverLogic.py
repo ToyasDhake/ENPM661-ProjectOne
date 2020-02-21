@@ -4,6 +4,7 @@ from copy import deepcopy
 import numpy as np
 
 
+# Node class contains current puzzle state, parent, index and score
 class Node:
     def __init__(self, currentBorad, index, parent=None, action=None):
         self.currentBorad = currentBorad
@@ -16,7 +17,7 @@ class Node:
             self.g = 0
         self.f = self.g + currentBorad.score()
 
-    @property
+    # Returns the path from initial state to current state.
     def path(self):
         node, p = self, []
         while node:
@@ -24,18 +25,19 @@ class Node:
             node = node.parent
         yield from reversed(p)
 
-    @property
+    # Returns current available moves
     def actions(self):
         if self.action == None:
             return self.currentBorad.availbleMoves()
         else:
             return self.currentBorad.availbleMoves(self.action)
 
-
+# Solver class solve the puzzle
 class Solver:
     def __init__(self, gameBoard):
         self.start = gameBoard
 
+    # Solves the puzzle and returns path from initial state to goal state.
     def solve(self):
         count = 1
         queue = deque()
@@ -50,11 +52,10 @@ class Solver:
             node = queue.popleft()
             if node.currentBorad.score() == 0:
                 self.que = deque(sorted(list(self.que), key=lambda node: node.index))
-                return node.path
+                return node.path()
 
-            for action in node.actions:
+            for action in node.actions():
                 child = Node(node.currentBorad.move(action), count, node, action)
-
 
                 if child.currentBorad not in seen:
                     self.que.append(Node(node.currentBorad.move(action), count, node, action))
@@ -63,10 +64,13 @@ class Solver:
                     seen.add(child.currentBorad)
 
 
+# Puzzle class keeps track of current state of gameBoard and all gameBoard related activities such as finding
+# possible moves, performing actions, calculating score and finding the location of blank space.
 class Puzzle:
     def __init__(self, gameBoard):
         self.gameBoard = gameBoard
 
+    # Checks is the gameBoard is Solvable.
     def isSolvable(self):
         count = 0
         array = np.array(self.gameBoard).flatten()
@@ -80,31 +84,13 @@ class Puzzle:
         else:
             return False
 
+    # Returns the location of black space on gameBorad
     def getLocationOfBlank(self, gameBoard):
         for i, j in product(range(3), range(3)):
             if gameBoard[i][j] is 0:
                 return i, j
 
-    def printBorad(self):
-        for row in self.gameBoard:
-            print(row)
-        print("xxxxxxxxx")
-
-    def checkIfSolvable(self):
-        counter = 0
-        newList = list(chain.from_iterable(self.gameBoard))
-        for i in range(9):
-            for j in range(9):
-                if i < j:
-                    if newList[i] > newList[j]:
-                        if newList[j] is not 0:
-                            counter += 1
-
-        if counter % 2 is 0:
-            return True
-        else:
-            return False
-
+    # Returns score of current state. It is the summation of distance of blocks from where they are supposed to be.
     def score(self):
         distance = 0
         for i in range(3):
@@ -114,7 +100,8 @@ class Puzzle:
                     distance += abs(x - i) + abs(y - j)
         return distance
 
-    def availbleMoves(self, removeCh = "A"):
+    # Returns all possible moves.
+    def availbleMoves(self, removeCh="A"):
         row, col = self.getLocationOfBlank(self.gameBoard)
         list = []
         if row is not 0:
@@ -125,6 +112,7 @@ class Puzzle:
             list.append("L")
         if col is not 2:
             list.append("R")
+        # Remove the action taken by parent so as to not end up same as parent.
         if removeCh != "A":
             if removeCh == "U":
                 list.remove("D")
@@ -136,15 +124,24 @@ class Puzzle:
                 list.remove("R")
         return list
 
+    # Perform the action on gameBoard.
     def move(self, val):
         row, col = self.getLocationOfBlank(self.gameBoard)
         newGameBoard = deepcopy(self)
         if val is 'U':
-            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row - 1][col] = newGameBoard.gameBoard[row - 1][col], newGameBoard.gameBoard[row][col]
+            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row - 1][col] = newGameBoard.gameBoard[row - 1][
+                                                                                         col], \
+                                                                                     newGameBoard.gameBoard[row][col]
         elif val is 'D':
-            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row + 1][col] = newGameBoard.gameBoard[row + 1][col], newGameBoard.gameBoard[row][col]
+            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row + 1][col] = newGameBoard.gameBoard[row + 1][
+                                                                                         col], \
+                                                                                     newGameBoard.gameBoard[row][col]
         elif val is 'L':
-            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row][col - 1] = newGameBoard.gameBoard[row][col- 1], newGameBoard.gameBoard[row][col]
+            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row][col - 1] = newGameBoard.gameBoard[row][
+                                                                                         col - 1], \
+                                                                                     newGameBoard.gameBoard[row][col]
         elif val is 'R':
-            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row][col + 1] = newGameBoard.gameBoard[row][col + 1], newGameBoard.gameBoard[row][col]
+            newGameBoard.gameBoard[row][col], newGameBoard.gameBoard[row][col + 1] = newGameBoard.gameBoard[row][
+                                                                                         col + 1], \
+                                                                                     newGameBoard.gameBoard[row][col]
         return newGameBoard
