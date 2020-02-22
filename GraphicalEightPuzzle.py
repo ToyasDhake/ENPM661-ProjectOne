@@ -1,4 +1,5 @@
 import os
+
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from itertools import product
@@ -16,11 +17,13 @@ myfont = pygame.font.SysFont('Comic Sans MS', 100)
 ticks = 400
 clock = pygame.time.Clock()
 
+
 # Function returns loaction of blank space on the grid
 def getLocationOfBlank(gameBoard):
     for i, j in product(range(3), range(3)):
         if gameBoard[i][j] is 0:
             return i, j
+
 
 # Function takes care of animation of the game board. It receives 2 boards at a time animate transition from one to
 # another.

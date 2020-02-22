@@ -13,7 +13,7 @@ There are 3 files
 - GraphicalEightPuzzle.py
 - SolverLogic.py
  
-SolverLogic.py is the file which has implementatioon of 8 Puzzle problem solver.
+SolverLogic.py is the file which has implementation of 8 Puzzle problem solver.
 
 TextEightPuzzle.py uses the SolverLogic.py to solve the problem and create required text files as output.
 
@@ -27,7 +27,7 @@ For this it creates all possible moves for any given states and checks if goal s
 creates all possible nodes for each child node. To avoid getting stuck in loop 2 things are being tracked-
 - A Set is maintained that holds all the explored nodes and each time a child is create it checks if the node is previously visited.
 - While calculating all possible move the reverse of last performed move is not considered i.e. if a state is reached by performing the "Up" move
-then for that perticular move the "Down" actioon will not be considered for creating child as it would result in parent of the node.
+then for that perticular move the "Down" action will not be considered for creating child as it would result in parent of the node.
 
 BFS takes a lot of time to excute so it is needed to be optimized in order to reduce the run time. Here, the biased part comes into picture. Every time 
 a child is created its score is calculated based on where it stands compared to goal state. And child with better score is given priority.
